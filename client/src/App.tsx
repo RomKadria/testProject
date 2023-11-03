@@ -7,7 +7,7 @@ const App: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<Navigate to={routes.home} />} />
-      <Route path={routes.SimpleGetResponse} element={<SimpleGetResponse/>} />
+      <Route path={routes.SimpleGetResponse} element={<SimpleGetResponse number={32}/>} />
     </Routes>
   );
 };
