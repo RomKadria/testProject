@@ -4,14 +4,18 @@ import axios from '../axios';
 import { Container, Typography, Paper } from '@mui/material';
 import { ServerResponse } from '../types/serverResponse';
 
-const SimpleGetResponse: React.FC = () => {
+interface simepleProps {
+  number?: number;
+}
+
+const SimpleGetResponse: React.FC<simepleProps> = ({ number }) => {
   const [responseData, setResponseData] = useState<string>('');
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get<ServerResponse>('/'); 
-        console.log(response.data.number)
         setResponseData(response.data.message); // Assuming the response has a `message` field
       } catch (error) {
         console.error('Error fetching data: ', error);
@@ -20,7 +24,9 @@ const SimpleGetResponse: React.FC = () => {
     };
 
     fetchData();
+    console.log(number);
   }, []);
+
 
   return (
     <Container component="main" maxWidth="sm" >
