@@ -23,7 +23,7 @@ const SimpleGetResponse: React.FC = () => {
   }, []);
 
   return (
-    <Container component="main" maxWidth="sm">
+    <Container component="main" maxWidth="sm" >
       <Paper style={{ padding: 20, marginTop: 30 }}>
         <Typography variant="h5" component="h3">
           Server Response
