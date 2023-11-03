@@ -4,8 +4,15 @@ const apiRouter = Router();
 
 apiRouter.use(express.json());
 
-apiRouter.get('/', (req, res) => {
-  res.json({ number: 2, message: 'gfsg' });
+interface QueryParams {
+  filter: string;
+}
+
+apiRouter.get('/:id', (req, res) => {
+  const { id } = req.params;
+  const { filter } = req.query as unknown as QueryParams;
+  
+  res.json({ number: 2, message: 'gfsg', id, filter });
   });
 
 export default apiRouter;

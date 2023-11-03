@@ -3,20 +3,47 @@ import React, { useState, useEffect } from 'react';
 import axios from '../axios';
 import { Container, Typography, Paper } from '@mui/material';
 import { ServerResponse } from '../types/serverResponse';
+// import useFetch from 'use-http';
+
 
 interface simepleProps {
   number?: number;
 }
 
+interface FilterParams {
+  filter: string;
+}
+
 const SimpleGetResponse: React.FC<simepleProps> = ({ number }) => {
   const [responseData, setResponseData] = useState<string>('');
+  // const {
+  //   data: myData,
+  //   error,
+  // } = useFetch<ServerResponse>(`/api`, {}, []);
 
+  // useEffect(() => {
+  //   if (myData) {
+  //     setResponseData(myData.message)
+  //     console.log(number)
+  //   }
+
+  //   console.log(myData)
+  // },[myData])
+
+  // useEffect(() => {
+
+  //   console.log(error)
+  // },[error])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get<ServerResponse>('/'); 
-        setResponseData(response.data.message); // Assuming the response has a `message` field
+        const filters: FilterParams = {filter: "ds"}
+        const response = await axios.get<ServerResponse>(`/4`, {
+          params: filters,
+        }); 
+        console.log(response);
+        setResponseData(response.data.message);
       } catch (error) {
         console.error('Error fetching data: ', error);
         setResponseData('Failed to load data from server');
