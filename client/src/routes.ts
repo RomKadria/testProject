@@ -1,5 +1,6 @@
 export const routes = {
     home: '/home',
-    SimpleGetResponse: '/simple'
+    SimpleGetResponse: '/simple',
+    SimplerGetResponse: '/simpler'
   } as const;
   

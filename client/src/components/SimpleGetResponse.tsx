@@ -1,9 +1,10 @@
 // src/components/SimpleGetResponse.tsx
 import React, { useState, useEffect } from 'react';
-import axios from '../axios';
-import { Container, Typography, Paper } from '@mui/material';
+// import axios from '../axios';
+import { Container, Typography, Paper, Button } from '@mui/material';
 import { ServerResponse } from '../types/serverResponse';
-// import useFetch from 'use-http';
+import useFetch from 'use-http';
+import { useNavigate } from 'react-router-dom';
 
 
 interface simepleProps {
@@ -11,52 +12,51 @@ interface simepleProps {
 }
 
 interface FilterParams {
-  filter: string;
+  value: string;
 }
 
 const SimpleGetResponse: React.FC<simepleProps> = ({ number }) => {
   const [responseData, setResponseData] = useState<string>('');
-  // const {
-  //   data: myData,
-  //   error,
-  // } = useFetch<ServerResponse>(`/api`, {}, []);
+  const {
+    get, response, loading, error
+  } = useFetch<ServerResponse>(`/`, {}, []);
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (myData) {
-  //     setResponseData(myData.message)
-  //     console.log(number)
-  //   }
 
-  //   console.log(myData)
-  // },[myData])
+  useEffect(() => { initResponse() }, [])
 
-  // useEffect(() => {
-
-  //   console.log(error)
-  // },[error])
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const filters: FilterParams = {filter: "ds"}
-        const response = await axios.get<ServerResponse>(`/4`, {
-          params: filters,
-        }); 
-        console.log(response);
-        setResponseData(response.data.message);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-        setResponseData('Failed to load data from server');
-      }
-    };
-
-    fetchData();
+  const initResponse = async () => {
+    const filter: FilterParams = {value: 'hello'};
+    const id = '4';
+    const initResponse = await get(`${id}?filter=${filter.value}`);
     console.log(number);
-  }, []);
+    if (response.ok) setResponseData(initResponse.message)
+  }
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const filters: FilterParams = {filter: "ds"}
+  //       const response = await axios.get<ServerResponse>(`/4`, {
+  //         params: filters,
+  //       }); 
+  //       console.log(response);
+  //       setResponseData(response.data.message);
+  //     } catch (error) {
+  //       console.error('Error fetching data: ', error);
+  //       setResponseData('Failed to load data from server');
+  //     }
+  //   };
+
+  //   fetchData();
+  //   console.log(number);
+  // }, []);
 
 
   return (
     <Container component="main" maxWidth="sm" >
+       {error && 'Error!'}
+      {loading && 'Loading...'}
       <Paper style={{ padding: 20, marginTop: 30 }}>
         <Typography variant="h5" component="h3">
           Server Response
@@ -65,6 +65,7 @@ const SimpleGetResponse: React.FC<simepleProps> = ({ number }) => {
           {responseData}
         </Typography>
       </Paper>
+      <Button onClick={() => navigate("/simpler")}>Go to Other Component</Button>
     </Container>
   );
 };
