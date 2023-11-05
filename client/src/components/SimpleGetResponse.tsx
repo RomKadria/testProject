@@ -7,7 +7,7 @@ import useFetch from 'use-http';
 import { useNavigate } from 'react-router-dom';
 
 
-interface simepleProps {
+interface simpleProps {
   number?: number;
 }
 
@@ -15,7 +15,7 @@ interface FilterParams {
   value: string;
 }
 
-const SimpleGetResponse: React.FC<simepleProps> = ({ number }) => {
+const SimpleGetResponse: React.FC<simpleProps> = ({ number }) => {
   const [responseData, setResponseData] = useState<string>('');
   const {
     get, response, loading, error
