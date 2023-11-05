@@ -21,37 +21,47 @@ const fetchJsonData = async(url: string) => {
   }
 }
 
-const fetchAndParseCSV = async (url: string, callback: (data: any[]) => void) => {
-    const response = await axios({ url, method: 'GET', responseType: 'stream' });
+const fetchAndParseCSV = async (url: string): Promise<personExcel[]> => {
+  const response = await axios({ url, method: 'GET', responseType: 'stream' });
+  return new Promise((resolve, reject) => {
     let results: any[] = [];
     response.data.pipe(csv())
       .on('data', (data: any) => results.push(data))
-      .on('end', () => {
-        callback(results);
-      });
-  }
+      .on('end', () => resolve(results))
+      .on('error', (error: any) => reject(error));
+  });
+};
 
   apiRouter.get('/applicant/all', async (req, res) => {
     const jsonDataUrl = 'https://bit.ly/3eTzIN4';
     const csvDataUrl = 'https://hs-recruiting-test-resume-data.s3.amazonaws.com/linkedin_source_b1f6-acde48001122.csv';
 
-    const candidates: CandidateData[] = []
-    const jsonData = await fetchJsonData(jsonDataUrl);
-    const x = jsonData[0] as Profile;
-    fetchAndParseCSV(csvDataUrl, (csvData: personExcel[]) => {
-      jsonData.forEach((candidate: Profile) => {
+    try {
+      const jsonData = await fetchJsonData(jsonDataUrl);
+      const csvData = await fetchAndParseCSV(csvDataUrl);
+  
+      const candidates = jsonData.map((candidate: Profile) => {
         const normalizedPhone = candidate.contact_info.phone?.replace(/[\s-]/g, '');
         const excelInfo = csvData.find(csvItem => csvItem['Phone Number'] === normalizedPhone);
-        const candidateData: CandidateData = {name:candidate.contact_info.name.formatted_name, linkedIn: excelInfo?.Linkedin, experience: [] }
-        candidate.experience.forEach(exp => {
-          candidateData.experience.push({title: exp.title, start: exp.start_date, end: exp.end_date})
-        })
-
-        candidates.push(candidateData);
+  
+        const candidateData: CandidateData = {
+          name: candidate.contact_info.name.formatted_name,
+          linkedIn: excelInfo?.Linkedin,
+          experience: candidate.experience.map(exp => ({
+            title: exp.title,
+            start: exp.start_date,
+            end: exp.end_date
+          }))
+        };
+  
+        return candidateData;
       });
-      
-      res.send(candidates);
-    });
+  
+      res.json(candidates);
+    } catch (error) {
+      console.error('Error fetching candidate data:', error);
+      res.status(500).send('Error fetching candidate data');
+    }
   });
 
 

@@ -40,7 +40,8 @@ const HiredScore: React.FC = () => {
            <Paper style={{ padding: 20, marginTop: 30 }}>
           <Typography key={canIndex} style={{ marginTop: 15, fontWeight: 'bold' }}>
           Name: {candidate.name}
-          {candidate.linkedIn && `, LinkedIn: ${candidate.linkedIn}`}
+          <br/>
+          {candidate.linkedIn && `LinkedIn: ${candidate.linkedIn}`}
           </Typography>
           {candidate.experience.sort((a, b) => moment(b.start).diff(moment(a.start))).map((exp, expIndex) => (
              <Typography key={expIndex} style={{ marginTop: 15 }}>
