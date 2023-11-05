@@ -39,7 +39,6 @@ const fetchAndParseCSV = async (url: string, callback: (data: any[]) => void) =>
     const jsonData = await fetchJsonData(jsonDataUrl);
     const x = jsonData[0] as Profile;
     fetchAndParseCSV(csvDataUrl, (csvData: personExcel[]) => {
-      // Enrich and print data
       jsonData.forEach((candidate: Profile) => {
         const normalizedPhone = candidate.contact_info.phone?.replace(/[\s-]/g, '');
         const excelInfo = csvData.find(csvItem => csvItem['Phone Number'] === normalizedPhone);
@@ -50,6 +49,7 @@ const fetchAndParseCSV = async (url: string, callback: (data: any[]) => void) =>
 
         candidates.push(candidateData);
       });
+      
       res.send(candidates);
     });
   });

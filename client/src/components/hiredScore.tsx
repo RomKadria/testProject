@@ -26,10 +26,9 @@ const HiredScore: React.FC = () => {
     if (response.ok) setCandidates(applicantsResponse)
   }
 
-  const calcGap = (newStart: string, prevEnd: string ) => {
-    return moment(newStart).diff(moment(prevEnd), 'd');
-  }
-
+  const calcGap = (newStart: string, prevEnd: string ) => 
+   moment(newStart).diff(moment(prevEnd), 'd');
+  
   return (
     <Container component="main" maxWidth="sm" >
        {error && 'Error!'}
